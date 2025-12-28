@@ -1,0 +1,1254 @@
+﻿<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Artem — превью и аватарки</title>
+  <meta name="description" content="Artem — делаю превью и аватарки. Заказ в Telegram @artemxxw2. RU/UK/EN." />
+
+  <style>
+    :root{
+      --bg0:#070b14;
+      --bg1:#0b1220;
+
+      --glass: rgba(255,255,255,.10);
+      --glass2: rgba(255,255,255,.14);
+      --border: rgba(255,255,255,.16);
+
+      --text: rgba(255,255,255,.92);
+      --muted: rgba(255,255,255,.72);
+      --muted2: rgba(255,255,255,.55);
+
+      --shadow: 0 18px 60px rgba(0,0,0,.55);
+      --shadow2: 0 18px 70px rgba(0,0,0,.32);
+
+      --r: 18px;
+      --r2: 30px;
+      --max: 1120px;
+
+      --accentA: rgba(124,58,237,.95);
+      --accentB: rgba(34,197,94,.78);
+
+      /* ФОТО НА ФОН (поставь рядом с html файл bg.jpg) */
+      --bgimg: url("bg.jpg");
+    }
+
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    html{scroll-behavior:smooth}
+
+    body{
+      margin:0;
+      font-family: ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial,"Noto Sans",sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(900px 650px at 20% -10%, rgba(124,58,237,.22), transparent 60%),
+        radial-gradient(900px 650px at 90% 10%, rgba(34,197,94,.18), transparent 55%),
+        linear-gradient(180deg, var(--bg0), var(--bg1));
+      overflow-x:hidden;
+    }
+
+    /* БОЛЬШОЙ ФОТО-ФОН + BLUR */
+    body::before{
+      content:"";
+      position:fixed; inset:0;
+      z-index:-6;
+      background-image: var(--bgimg);
+      background-size:cover;
+      background-position:center;
+      filter: blur(16px) saturate(1.08) contrast(1.08);
+      opacity:.28;
+      transform: scale(1.06);
+      pointer-events:none;
+    }
+    body::after{
+      content:"";
+      position:fixed; inset:0;
+      z-index:-5;
+      background:
+        radial-gradient(900px 650px at 50% 18%, rgba(0,0,0,.25), rgba(0,0,0,.78));
+      pointer-events:none;
+    }
+
+    a{color:inherit;text-decoration:none}
+    .wrap{max-width:var(--max);margin:0 auto;padding:0 18px; position:relative; z-index:2;}
+
+    /* subtle grid/dots + grain */
+    .bg-grid{
+      position:fixed; inset:0;
+      pointer-events:none;
+      z-index:-2;
+      opacity:.75;
+      background-image:
+        linear-gradient(to right, rgba(255,255,255,.06) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255,255,255,.06) 1px, transparent 1px);
+      background-size: 28px 28px;
+      mask-image: radial-gradient(820px 620px at 50% 18%, #000 55%, transparent 100%);
+      -webkit-mask-image: radial-gradient(820px 620px at 50% 18%, #000 55%, transparent 100%);
+    }
+    .bg-dots{
+      position:fixed; inset:-40px;
+      pointer-events:none;
+      z-index:-3;
+      opacity:.50;
+      background-image: radial-gradient(rgba(255,255,255,.07) 1px, transparent 1px);
+      background-size: 22px 22px;
+      transform: rotate(-6deg);
+      mask-image: radial-gradient(950px 680px at 50% 28%, #000 55%, transparent 100%);
+      -webkit-mask-image: radial-gradient(950px 680px at 50% 28%, #000 55%, transparent 100%);
+    }
+    .grain{
+      position:fixed; inset:0;
+      pointer-events:none;
+      z-index:-1;
+      opacity:.10;
+      background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='260' height='260'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='260' height='260' filter='url(%23n)' opacity='.55'/%3E%3C/svg%3E");
+      mix-blend-mode: overlay;
+    }
+
+    /* SNOW (emoji) */
+    .snowflake{
+      position:fixed;
+      top:-20px;
+      color:#fff;
+      pointer-events:none;
+      user-select:none;
+      text-shadow: 0 8px 22px rgba(0,0,0,.45);
+      animation-name: fall;
+      animation-timing-function: linear;
+      animation-iteration-count: infinite;
+      z-index: 80;
+      opacity: .92;
+    }
+    @keyframes fall{
+      0%{transform: translate3d(var(--x,0), -30px, 0) rotate(0deg)}
+      100%{transform: translate3d(var(--x,0), 110vh, 0) rotate(360deg)}
+    }
+
+    /* Reveal */
+    .reveal{opacity:0; transform: translateY(14px); transition: .65s ease; transition-property: opacity, transform;}
+    .reveal.on{opacity:1; transform:none;}
+
+    /* Topbar (glass) */
+    .topbar{
+      position:sticky; top:0; z-index:50;
+      backdrop-filter: blur(12px);
+      background: linear-gradient(180deg, rgba(7,10,15,.72), rgba(7,10,15,.25));
+      border-bottom: 1px solid rgba(255,255,255,.10);
+    }
+    .topbar-inner{
+      display:flex; align-items:center; justify-content:space-between;
+      gap:12px; padding: 12px 0;
+    }
+    .brand{
+      display:flex; align-items:center; gap:12px;
+      min-width: 190px;
+    }
+    .mark{
+      width:38px; height:38px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, var(--accentA), var(--accentB));
+      box-shadow: 0 18px 55px rgba(124,58,237,.18);
+      display:grid; place-items:center;
+      position:relative; overflow:hidden;
+      border:1px solid rgba(255,255,255,.16);
+    }
+    .mark::after{
+      content:"";
+      position:absolute; inset:-50%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,.35), transparent);
+      transform: rotate(20deg);
+      animation: shine 6.2s linear infinite;
+    }
+    @keyframes shine{
+      0%{transform:translateX(-40%) rotate(20deg)}
+      100%{transform:translateX(40%) rotate(20deg)}
+    }
+    .mark span{
+      position:relative; z-index:1;
+      font-weight:1000; letter-spacing:-.5px;
+      color:#0a1220; font-size: 14px;
+    }
+    .brand b{display:block;font-size:14px;letter-spacing:.2px}
+    .brand small{display:block;color:var(--muted);font-weight:800;margin-top:2px;font-size:12px}
+
+    nav{
+      display:flex; gap:14px; justify-content:center;
+      flex:1; color:var(--muted);
+      font-weight:850; font-size:14px;
+    }
+    nav a{padding:10px 10px;border-radius:12px}
+    nav a:hover{background: rgba(255,255,255,.08); color: var(--text)}
+
+    .langbar{display:flex; align-items:center; gap:8px; flex-wrap:wrap}
+    .langbtn{
+      padding: 9px 10px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.08);
+      color: var(--muted);
+      font-weight:950;
+      cursor:pointer;
+      user-select:none;
+      transition: transform .12s ease, background .12s ease, border-color .12s ease;
+      backdrop-filter: blur(10px);
+    }
+    .langbtn:hover{transform: translateY(-1px); background: rgba(255,255,255,.12); border-color: rgba(255,255,255,.18); color: var(--text)}
+    .langbtn.active{
+      color:#08101b;
+      background: linear-gradient(135deg, var(--accentA), var(--accentB));
+      border-color: rgba(255,255,255,.18);
+    }
+
+    .btn{
+      display:inline-flex; align-items:center; justify-content:center;
+      gap:10px;
+      padding: 12px 16px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.09);
+      color: var(--text);
+      box-shadow: 0 10px 30px rgba(0,0,0,.25);
+      font-weight:900;
+      cursor:pointer;
+      transition: transform .14s ease, background .14s ease, border-color .14s ease;
+      white-space:nowrap;
+      backdrop-filter: blur(10px);
+    }
+    .btn:hover{transform: translateY(-1px); background: rgba(255,255,255,.13); border-color: rgba(255,255,255,.20)}
+    .btn.primary{
+      background: linear-gradient(135deg, var(--accentA), var(--accentB));
+      color:#09101b;
+      border-color: rgba(255,255,255,.18);
+      box-shadow: 0 18px 55px rgba(124,58,237,.18);
+    }
+    .btn.primary:hover{transform: translateY(-2px)}
+    .btn.ghost{background: rgba(0,0,0,.22)}
+    .btn.disabled{
+      opacity:.45;
+      cursor:not-allowed;
+      transform:none !important;
+    }
+    .burger{display:none}
+
+    .mnav{display:none; border-top: 1px solid rgba(255,255,255,.10); padding: 10px 0 14px}
+    .mnav.open{display:block}
+    .mnav a{display:block; padding: 12px 10px; border-radius: 14px; color: var(--muted); font-weight:950}
+    .mnav a:hover{background: rgba(255,255,255,.08); color: var(--text)}
+
+    /* Hero */
+    .hero{padding: 26px 0 18px}
+    .hero-grid{
+      display:grid;
+      grid-template-columns: 1.15fr .85fr;
+      gap: 16px;
+      align-items:stretch;
+    }
+    .card{
+      border: 1px solid var(--border);
+      background: var(--glass);
+      border-radius: var(--r2);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(12px);
+      overflow:hidden;
+      transition: transform .2s ease, background .2s ease, border-color .2s ease, box-shadow .2s ease;
+    }
+    .card:hover{
+      transform: translateY(-2px);
+      background: var(--glass2);
+      border-color: rgba(255,255,255,.18);
+      box-shadow: var(--shadow2);
+    }
+
+    .hero-main{
+      padding: 22px 20px;
+      position:relative;
+      overflow:hidden;
+    }
+    .hero-main::before{
+      content:"";
+      position:absolute; inset:-1px;
+      border-radius: var(--r2);
+      background:
+        radial-gradient(520px 300px at 20% 20%, rgba(124,58,237,.22), transparent 60%),
+        radial-gradient(650px 340px at 85% 70%, rgba(34,197,94,.16), transparent 55%);
+      pointer-events:none;
+      z-index:0;
+    }
+    .hero-main > *{position:relative; z-index:1}
+
+    .kicker{
+      display:inline-flex; align-items:center; gap:8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.07);
+      color: var(--muted);
+      font-weight:950;
+      font-size: 13px;
+      backdrop-filter: blur(10px);
+    }
+    h1{
+      margin: 14px 0 10px;
+      font-size: clamp(28px, 3.3vw, 46px);
+      line-height:1.06;
+      letter-spacing:-.7px;
+      text-shadow: 0 10px 30px rgba(0,0,0,.35);
+    }
+    .lead{
+      margin:0;
+      color:var(--muted);
+      line-height:1.6;
+      font-weight:750;
+      font-size: 16px;
+      max-width: 68ch;
+    }
+    .actions{display:flex; gap:12px; flex-wrap:wrap; margin-top: 16px}
+    .meta{
+      display:flex; gap:10px; flex-wrap:wrap;
+      margin-top: 16px;
+      color: var(--muted2);
+      font-weight:850;
+      font-size: 13px;
+    }
+    .pill{
+      display:inline-flex; align-items:center; gap:8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.18);
+      backdrop-filter: blur(10px);
+    }
+
+    .hero-side{padding: 18px; display:flex; flex-direction:column; gap:12px}
+    .mini{
+      padding: 14px;
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.16);
+    }
+    .mini b{font-size: 18px}
+    .mini span{
+      display:block;
+      margin-top: 6px;
+      color: var(--muted);
+      font-weight:800;
+      font-size: 13px;
+      line-height:1.35;
+    }
+    .note{
+      padding: 14px;
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.16);
+      color: var(--muted);
+      font-weight:800;
+      line-height:1.55;
+      font-size: 14px;
+    }
+
+    section{padding: 22px 0}
+    .section-head{
+      display:flex;
+      align-items:flex-end;
+      justify-content:space-between;
+      gap: 12px;
+      flex-wrap:wrap;
+      margin-bottom: 12px;
+    }
+    .section-head h2{margin:0; font-size: 22px; letter-spacing:-.2px}
+    .section-head p{margin:0; color: var(--muted); font-weight:800}
+
+    /* Pricing */
+    .pricing{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+    .tariff-group{padding:18px}
+    .group-title{
+      display:flex; align-items:flex-end; justify-content:space-between;
+      gap:10px; flex-wrap:wrap;
+      margin-bottom: 10px;
+    }
+    .group-title b{font-size:18px}
+    .group-title small{color:var(--muted); font-weight:900}
+    .tariffs{
+      display:grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+      margin-top: 8px;
+    }
+    .tcard{
+      padding: 14px;
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.14);
+      transition: transform .14s ease, background .14s ease, border-color .14s ease, box-shadow .14s ease;
+      cursor:pointer;
+      user-select:none;
+      backdrop-filter: blur(10px);
+    }
+    .tcard:hover{
+      transform: translateY(-2px);
+      background: rgba(255,255,255,.08);
+      border-color: rgba(255,255,255,.18)
+    }
+    .tcard.active{
+      background: rgba(255,255,255,.12);
+      border-color: rgba(34,197,94,.45);
+      box-shadow: 0 18px 60px rgba(34,197,94,.12);
+    }
+    .t-top{display:flex;justify-content:space-between;gap:10px;align-items:baseline}
+    .t-top strong{font-size: 15px}
+    .t-price{font-weight:1000;color:rgba(255,255,255,.86)}
+    .t-desc{margin-top:8px;color:var(--muted);font-weight:800;line-height:1.45;font-size:13px}
+    .t-meta{margin-top:10px;display:flex;gap:8px;flex-wrap:wrap}
+    .tag{
+      font-size: 12px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.06);
+      color: rgba(255,255,255,.72);
+      font-weight:900;
+      white-space:nowrap;
+    }
+
+    /* Order */
+    .order{
+      padding: 18px;
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      align-items:start;
+    }
+    .panel{
+      padding: 14px;
+      border-radius: 18px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.14);
+      backdrop-filter: blur(12px);
+    }
+    .panel h3{margin:0 0 8px}
+    .panel p{margin:0; color:var(--muted); font-weight:800; line-height:1.55}
+    .field{display:grid; gap:8px; margin-top: 12px}
+    label{font-size:12px; color: var(--muted2); font-weight:950; letter-spacing:.2px}
+    textarea, select, input{
+      width:100%;
+      padding: 12px 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.08);
+      color: var(--text);
+      outline:none;
+      font-weight:800;
+      transition: border-color .18s ease, background .18s ease;
+    }
+    textarea:focus, select:focus, input:focus{
+      border-color: rgba(124,58,237,.65);
+      background: rgba(255,255,255,.10);
+    }
+    textarea{min-height: 120px; resize: vertical}
+    .hint{color: var(--muted2); font-size: 12px; font-weight:800; line-height:1.45}
+    .build{
+      display:flex; gap:10px; flex-wrap:wrap; align-items:center;
+      margin-top: 14px;
+    }
+    .previewbox{
+      margin-top: 12px;
+      border-radius: 16px;
+      border: 1px dashed rgba(255,255,255,.22);
+      background: rgba(0,0,0,.14);
+      padding: 12px;
+      color: rgba(255,255,255,.86);
+      font-weight:800;
+      line-height:1.5;
+      font-size: 13px;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    footer{
+      padding: 18px 0 30px;
+      color: var(--muted2);
+      font-weight:800;
+      border-top: 1px solid rgba(255,255,255,.10);
+      margin-top: 12px;
+    }
+    .footer-inner{display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap}
+
+    /* Floating CTA */
+    .fab{
+      position:fixed;
+      right:16px; bottom:16px;
+      z-index:90;
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+    }
+    .fab a{
+      border-radius: 16px;
+      padding: 12px 14px;
+      font-weight:1000;
+      border: 1px solid rgba(255,255,255,.16);
+      box-shadow: 0 18px 60px rgba(0,0,0,.35);
+      backdrop-filter: blur(12px);
+    }
+
+    @media (max-width: 980px){
+      nav{display:none}
+      .burger{display:inline-flex}
+      .hero-grid{grid-template-columns:1fr}
+      .pricing{grid-template-columns:1fr}
+      .order{grid-template-columns:1fr}
+    }
+    @media (max-width: 520px){
+      .btn{width:100%}
+      .langbar{width:100%}
+      .langbtn{flex:1}
+      .brand{min-width:auto}
+    }
+  </style>
+</head>
+
+<body>
+  <div class="bg-dots" aria-hidden="true"></div>
+  <div class="bg-grid" aria-hidden="true"></div>
+  <div class="grain" aria-hidden="true"></div>
+
+  <!-- Floating CTA -->
+  <div class="fab" aria-label="Быстрые кнопки">
+    <a class="btn primary" href="https://t.me/artemxxw2" target="_blank" rel="noopener">
+      💬 <span data-i18n="fab_order">Заказать в Telegram</span>
+    </a>
+    <a class="btn ghost" href="https://t.me/GrafikDisaner" target="_blank" rel="noopener">
+      📢 <span data-i18n="fab_channel">Мой ТГК</span>
+    </a>
+  </div>
+
+  <header class="topbar">
+    <div class="wrap">
+      <div class="topbar-inner reveal">
+        <a class="brand" href="#top" aria-label="На главную">
+          <div class="mark" aria-hidden="true"><span>AR</span></div>
+          <div>
+            <b data-i18n="brand_title">Artem — Дизайнер</b>
+            <small data-i18n="brand_sub">Превью • аватарки</small>
+          </div>
+        </a>
+
+        <nav aria-label="Навигация">
+          <a href="#tariffs" data-i18n="nav_tariffs">Тарифы</a>
+          <a href="#order" data-i18n="nav_order">Оформить заказ</a>
+          <a href="#contact" data-i18n="nav_contact">Контакты</a>
+        </nav>
+
+        <div class="langbar" aria-label="Language switcher">
+          <button class="langbtn active" data-lang="ru" type="button">RU</button>
+          <button class="langbtn" data-lang="uk" type="button">UK</button>
+          <button class="langbtn" data-lang="en" type="button">EN</button>
+          <button class="btn burger" id="burger" type="button">☰ <span data-i18n="menu">Меню</span></button>
+        </div>
+      </div>
+
+      <div class="mnav" id="mnav">
+        <a href="#tariffs" data-i18n="nav_tariffs">Тарифы</a>
+        <a href="#order" data-i18n="nav_order">Оформить заказ</a>
+        <a href="#contact" data-i18n="nav_contact">Контакты</a>
+      </div>
+    </div>
+  </header>
+
+  <main id="top">
+    <!-- HERO -->
+    <section class="hero">
+      <div class="wrap">
+        <div class="hero-grid">
+          <div class="card hero-main reveal">
+            <div class="kicker">
+              <span>✦</span>
+              <span data-i18n="kicker">Сделаю дизайн, который цепляет</span>
+            </div>
+
+            <h1 data-i18n="h1">Artem — делаю<br/>превью и аватарки</h1>
+
+            <p class="lead" data-i18n="lead">
+              Выбирай тариф 1/2/3 → заполняй заявку → появится кнопка и тебя перекинет в Telegram ко мне в ЛС с готовым текстом.
+            </p>
+
+            <div class="actions">
+              <a class="btn primary" href="#order">
+                ⚡ <span data-i18n="go_order">Оформить заказ</span>
+              </a>
+              <a class="btn" href="#tariffs">
+                💎 <span data-i18n="go_tariffs">Смотреть тарифы</span>
+              </a>
+            </div>
+
+            <div class="meta">
+              <span class="pill" data-i18n="pill_1">🎯 Под твою нишу</span>
+              <span class="pill" data-i18n="pill_2">✅ Без цен на сайте</span>
+              <span class="pill" data-i18n="pill_3">⚡ Быстро</span>
+            </div>
+          </div>
+
+          <aside class="card hero-side reveal">
+            <div class="mini">
+              <b data-i18n="side_title">Что делаю</b>
+              <span data-i18n="side_text">Превью для YouTube/Shorts • Аватарки для Telegram/YouTube</span>
+            </div>
+            <div class="mini">
+              <b data-i18n="side_title2">Как заказать</b>
+              <span data-i18n="side_text2">Выбираешь тип и тариф 1/2/3 → пишешь описание → жмёшь кнопку → Telegram открывается с заявкой.</span>
+            </div>
+            <div class="note" data-i18n="note">
+              💡 Имя не нужно. В заявке: тип, тариф и описание.
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <!-- TARIFFS -->
+    <section id="tariffs">
+      <div class="wrap">
+        <div class="section-head reveal">
+          <h2 data-i18n="tariffs_title">Тарифы</h2>
+          <p data-i18n="tariffs_sub">Выбери 1 / 2 / 3 — без цен</p>
+        </div>
+
+        <div class="pricing">
+          <div class="card tariff-group reveal">
+            <div class="group-title">
+              <b data-i18n="group_preview">Превью</b>
+              <small data-i18n="group_hint">3 тарифа</small>
+            </div>
+
+            <div class="tariffs">
+              <div class="tcard" data-kind="preview" data-plan="1" tabindex="0">
+                <div class="t-top">
+                  <strong data-i18n="t1">Тариф 1</strong>
+                  <span class="t-price" data-i18n="p1_short">Быстро</span>
+                </div>
+                <div class="t-desc" data-i18n="p1_desc">Базовое превью: чисто, читабельно, без лишнего.</div>
+                <div class="t-meta">
+                  <span class="tag" data-i18n="tag_simple">минимал</span>
+                  <span class="tag" data-i18n="tag_clean">чисто</span>
+                </div>
+              </div>
+
+              <div class="tcard" data-kind="preview" data-plan="2" tabindex="0">
+                <div class="t-top">
+                  <strong data-i18n="t2">Тариф 2</strong>
+                  <span class="t-price" data-i18n="p2_short">Сильнее</span>
+                </div>
+                <div class="t-desc" data-i18n="p2_desc">Усиленный стиль: эффекты, выделение объекта, сильнее контраст.</div>
+                <div class="t-meta">
+                  <span class="tag" data-i18n="tag_ctr">CTR</span>
+                  <span class="tag" data-i18n="tag_fx">эффекты</span>
+                </div>
+              </div>
+
+              <div class="tcard" data-kind="preview" data-plan="3" tabindex="0">
+                <div class="t-top">
+                  <strong data-i18n="t3">Тариф 3</strong>
+                  <span class="t-price" data-i18n="p3_short">Максимум</span>
+                </div>
+                <div class="t-desc" data-i18n="p3_desc">Максимальный стиль: мощный эффект, подбор под канал, “как у топов”.</div>
+                <div class="t-meta">
+                  <span class="tag" data-i18n="tag_premium">премиум</span>
+                  <span class="tag" data-i18n="tag_brand">под бренд</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card tariff-group reveal">
+            <div class="group-title">
+              <b data-i18n="group_avatar">Аватарки</b>
+              <small data-i18n="group_hint">3 тарифа</small>
+            </div>
+
+            <div class="tariffs">
+              <div class="tcard" data-kind="avatar" data-plan="1" tabindex="0">
+                <div class="t-top">
+                  <strong data-i18n="t1">Тариф 1</strong>
+                  <span class="t-price" data-i18n="a1_short">Минимал</span>
+                </div>
+                <div class="t-desc" data-i18n="a1_desc">Аккуратная аватарка: чистая форма, хороший контраст, минимал.</div>
+                <div class="t-meta">
+                  <span class="tag" data-i18n="tag_simple">минимал</span>
+                  <span class="tag" data-i18n="tag_clean">чисто</span>
+                </div>
+              </div>
+
+              <div class="tcard" data-kind="avatar" data-plan="2" tabindex="0">
+                <div class="t-top">
+                  <strong data-i18n="t2">Тариф 2</strong>
+                  <span class="t-price" data-i18n="a2_short">Объём</span>
+                </div>
+                <div class="t-desc" data-i18n="a2_desc">Более “дорого”: объём, свет, эффект, аккуратный стиль.</div>
+                <div class="t-meta">
+                  <span class="tag" data-i18n="tag_fx">эффекты</span>
+                  <span class="tag" data-i18n="tag_glossy">объём</span>
+                </div>
+              </div>
+
+              <div class="tcard" data-kind="avatar" data-plan="3" tabindex="0">
+                <div class="t-top">
+                  <strong data-i18n="t3">Тариф 3</strong>
+                  <span class="t-price" data-i18n="a3_short">Бренд</span>
+                </div>
+                <div class="t-desc" data-i18n="a3_desc">Под бренд: подбор цветов/символики, максимальный стиль.</div>
+                <div class="t-meta">
+                  <span class="tag" data-i18n="tag_brand">под бренд</span>
+                  <span class="tag" data-i18n="tag_premium">премиум</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-top:14px" class="hint reveal" data-i18n="tariffs_hint">
+          💡 На сайте без цен. Просто выбери тариф 1/2/3 и напиши описание.
+        </div>
+      </div>
+    </section>
+
+    <!-- ORDER -->
+    <section id="order">
+      <div class="wrap">
+        <div class="section-head reveal">
+          <h2 data-i18n="order_title">Оформить заказ</h2>
+          <p data-i18n="order_sub">Выбери тип + тариф 1/2/3 + опиши — и появится кнопка</p>
+        </div>
+
+        <div class="card order reveal">
+          <div class="panel">
+            <h3 data-i18n="order_left_title">Заявка</h3>
+            <p data-i18n="order_left_text">Имя не нужно. В заявке только: тип, тариф и описание.</p>
+
+            <div class="field">
+              <label for="kind" data-i18n="f_kind">Тип</label>
+              <select id="kind">
+                <option value="" selected data-i18n="opt_choose">— выбери —</option>
+                <option value="preview" data-i18n="opt_preview">Превью</option>
+                <option value="avatar" data-i18n="opt_avatar">Аватарка</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label for="tariff" data-i18n="f_tariff">Тариф</label>
+              <select id="tariff">
+                <option value="" selected data-i18n="opt_choose_tariff">— выбери тариф —</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+              </select>
+              <div class="hint" data-i18n="pick_hint">Можно кликнуть на карточку тарифа выше — он выберется автоматически.</div>
+            </div>
+
+            <div class="field">
+              <label for="desc" data-i18n="f_desc">Описание</label>
+              <textarea id="desc" placeholder="Напиши текст, стиль, цвета, нишу, пример (если есть)."></textarea>
+              <div class="hint" data-i18n="desc_hint">Пример: “Превью для CapCut, стиль как у MrBeast, текст: …, цвета: …”</div>
+            </div>
+
+            <div class="field">
+              <label for="deadline" data-i18n="f_deadline">Сроки (необязательно)</label>
+              <input id="deadline" placeholder="Например: сегодня / завтра / до 18:00" />
+            </div>
+
+            <div class="build">
+              <!-- ВАЖНО: оставил логику "Собрать заявку" -> "Отправить в TG" -->
+              <button class="btn" id="btnBuild" type="button" data-i18n="btn_build">Собрать заявку</button>
+              <a class="btn primary disabled" id="btnTG" href="#" target="_blank" rel="noopener" aria-disabled="true">
+                💬 <span data-i18n="btn_send">Отправить в Telegram</span>
+              </a>
+            </div>
+
+            <div class="previewbox" id="previewText" style="display:none"></div>
+          </div>
+
+          <div class="panel">
+            <h3 data-i18n="order_right_title">Контакты</h3>
+            <p data-i18n="order_right_text">Если хочешь — можешь просто написать в Telegram.</p>
+
+            <div style="display:grid;gap:10px;margin-top:12px">
+              <a class="btn primary" href="https://t.me/artemxxw2" target="_blank" rel="noopener">
+                💬 <span data-i18n="tg_direct">Написать @artemxxw2</span>
+              </a>
+              <a class="btn" href="https://t.me/GrafikDisaner" target="_blank" rel="noopener">
+                📢 <span data-i18n="tg_channel">Перейти в ТГК</span>
+              </a>
+            </div>
+
+            <div class="note" style="margin-top:12px" data-i18n="order_note">
+              ✅ После заполнения появится кнопка, и Telegram откроется с готовым текстом.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section id="contact">
+      <div class="wrap">
+        <div class="section-head reveal">
+          <h2 data-i18n="contact_title">Контакты</h2>
+          <p data-i18n="contact_sub">Самый быстрый способ — Telegram</p>
+        </div>
+
+        <div class="card reveal" style="padding:18px">
+          <div style="display:flex; gap:12px; flex-wrap:wrap">
+            <a class="btn primary" href="https://t.me/artemxxw2" target="_blank" rel="noopener">💬 <span data-i18n="tg_direct">Написать @artemxxw2</span></a>
+            <a class="btn" href="https://t.me/GrafikDisaner" target="_blank" rel="noopener">📢 <span data-i18n="tg_channel">Перейти в ТГК</span></a>
+          </div>
+          <div class="hint" style="margin-top:12px" data-i18n="contact_note">
+            Чтобы быстро: тип + тариф 1/2/3 + описание + сроки.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer class="reveal">
+      <div class="wrap">
+        <div class="footer-inner">
+          <div>© <span id="year"></span> • <span data-i18n="footer">Artem — превью и аватарки</span></div>
+          <div style="display:flex; gap:10px; flex-wrap:wrap">
+            <a href="#tariffs" data-i18n="nav_tariffs">Тарифы</a>
+            <span style="opacity:.4">•</span>
+            <a href="#order" data-i18n="nav_order">Оформить заказ</a>
+          </div>
+        </div>
+      </div>
+    </footer>
+  </main>
+
+  <script>
+    const $ = (s)=>document.querySelector(s);
+    const $$ = (s)=>Array.from(document.querySelectorAll(s));
+    const TELEGRAM_USER = "artemxxw2";
+
+    $("#year").textContent = new Date().getFullYear();
+
+    // Mobile menu
+    const burger = $("#burger");
+    const mnav = $("#mnav");
+    if (burger) {
+      burger.addEventListener("click", () => mnav.classList.toggle("open"));
+      $$("#mnav a").forEach(a => a.addEventListener("click", () => mnav.classList.remove("open")));
+    }
+
+    // Snowflakes
+    (function spawnSnow(count){
+      const prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (prefersReduced) return;
+      const symbols = ['❄','❅','❆'];
+      for(let i=0;i<count;i++){
+        const s = document.createElement('div');
+        s.className = 'snowflake';
+        s.textContent = symbols[Math.floor(Math.random()*symbols.length)];
+        s.style.left = (Math.random()*100) + 'vw';
+        s.style.fontSize = (10 + Math.random()*18) + 'px';
+        s.style.animationDuration = (6 + Math.random()*10) + 's';
+        s.style.opacity = (0.35 + Math.random()*0.65).toFixed(2);
+        s.style.setProperty('--x', ((Math.random()*80)-40).toFixed(0) + 'px');
+        s.style.animationDelay = (-Math.random()*10).toFixed(2) + 's';
+        document.body.appendChild(s);
+      }
+    })(42);
+
+    // Reveal on scroll
+    (function(){
+      const els = document.querySelectorAll(".reveal");
+      const io = new IntersectionObserver((entries)=>{
+        entries.forEach(e=>{
+          if(e.isIntersecting) e.target.classList.add("on");
+        });
+      }, {threshold: .12});
+      els.forEach(el=>io.observe(el));
+    })();
+
+    // Order form logic (оставлено как было: "Собрать заявку" -> "Отправить в TG")
+    const kindSel = $("#kind");
+    const tariffSel = $("#tariff");
+    const descEl  = $("#desc");
+    const deadlineEl = $("#deadline");
+    const btnBuild = $("#btnBuild");
+    const btnTG = $("#btnTG");
+    const previewText = $("#previewText");
+
+    function disableTelegramButton(){
+      btnTG.classList.add("disabled");
+      btnTG.setAttribute("aria-disabled","true");
+      btnTG.href = "#";
+    }
+    disableTelegramButton();
+
+    // click tariff cards -> selects in form
+    $$(".tcard").forEach(card=>{
+      const pick = () => {
+        kindSel.value = card.dataset.kind;  // preview/avatar
+        tariffSel.value = card.dataset.plan; // 1/2/3
+        $$(".tcard").forEach(c => c.classList.remove("active"));
+        card.classList.add("active");
+        previewText.style.display = "none";
+        previewText.textContent = "";
+        disableTelegramButton();
+        document.getElementById("order").scrollIntoView({behavior:"smooth", block:"start"});
+      };
+      card.addEventListener("click", pick);
+      card.addEventListener("keydown", (e)=>{
+        if(e.key === "Enter" || e.key === " "){ e.preventDefault(); pick(); }
+      });
+    });
+
+    // i18n
+    const I18N = {
+      ru: {
+        brand_title:"Artem — Дизайнер",
+        brand_sub:"Превью • аватарки",
+        menu:"Меню",
+        nav_tariffs:"Тарифы",
+        nav_order:"Оформить заказ",
+        nav_contact:"Контакты",
+        kicker:"Сделаю дизайн, который цепляет",
+        h1:"Artem — делаю<br/>превью и аватарки",
+        lead:"Выбирай тариф 1/2/3 → заполняй заявку → появится кнопка и тебя перекинет в Telegram ко мне в ЛС с готовым текстом.",
+        go_order:"Оформить заказ",
+        go_tariffs:"Смотреть тарифы",
+        pill_1:"🎯 Под твою нишу",
+        pill_2:"✅ Без цен на сайте",
+        pill_3:"⚡ Быстро",
+        side_title:"Что делаю",
+        side_text:"Превью для YouTube/Shorts • Аватарки для Telegram/YouTube",
+        side_title2:"Как заказать",
+        side_text2:"Выбираешь тип и тариф 1/2/3 → пишешь описание → жмёшь кнопку → Telegram открывается с заявкой.",
+        note:"💡 Имя не нужно. В заявке: тип, тариф и описание.",
+
+        tariffs_title:"Тарифы",
+        tariffs_sub:"Выбери 1 / 2 / 3 — без цен",
+        group_preview:"Превью",
+        group_avatar:"Аватарки",
+        group_hint:"3 тарифа",
+        tariffs_hint:"💡 На сайте без цен. Просто выбери тариф 1/2/3 и напиши описание.",
+
+        t1:"Тариф 1",
+        t2:"Тариф 2",
+        t3:"Тариф 3",
+        p1_short:"Быстро",
+        p2_short:"Сильнее",
+        p3_short:"Максимум",
+        p1_desc:"Базовое превью: чисто, читабельно, без лишнего.",
+        p2_desc:"Усиленный стиль: эффекты, выделение объекта, сильнее контраст.",
+        p3_desc:"Максимальный стиль: мощный эффект, подбор под канал, “как у топов”.",
+        a1_short:"Минимал",
+        a2_short:"Объём",
+        a3_short:"Бренд",
+        a1_desc:"Аккуратная аватарка: чистая форма, хороший контраст, минимал.",
+        a2_desc:"Более “дорого”: объём, свет, эффект, аккуратный стиль.",
+        a3_desc:"Под бренд: подбор цветов/символики, максимальный стиль.",
+
+        tag_simple:"минимал",
+        tag_clean:"чисто",
+        tag_ctr:"CTR",
+        tag_fx:"эффекты",
+        tag_premium:"премиум",
+        tag_brand:"под бренд",
+        tag_glossy:"объём",
+
+        order_title:"Оформить заказ",
+        order_sub:"Выбери тип + тариф 1/2/3 + опиши — и появится кнопка",
+        order_left_title:"Заявка",
+        order_left_text:"Имя не нужно. В заявке только: тип, тариф и описание.",
+        f_kind:"Тип",
+        f_tariff:"Тариф",
+        f_desc:"Описание",
+        f_deadline:"Сроки (необязательно)",
+        btn_build:"Собрать заявку",
+        btn_send:"Отправить в Telegram",
+        pick_hint:"Можно кликнуть на карточку тарифа выше — он выберется автоматически.",
+        opt_choose:"— выбери —",
+        opt_choose_tariff:"— выбери тариф —",
+        opt_preview:"Превью",
+        opt_avatar:"Аватарка",
+        desc_hint:"Пример: “Превью для CapCut, стиль как у MrBeast, текст: …, цвета: …”",
+        need_fill:"Заполни: Тип + Тариф (1/2/3) + Описание. Тогда появится кнопка в Telegram.",
+
+        order_right_title:"Контакты",
+        order_right_text:"Если хочешь — можешь просто написать в Telegram.",
+        tg_direct:"Написать @artemxxw2",
+        tg_channel:"Перейти в ТГК",
+        order_note:"✅ После заполнения появится кнопка, и Telegram откроется с готовым текстом.",
+
+        contact_title:"Контакты",
+        contact_sub:"Самый быстрый способ — Telegram",
+        contact_note:"Чтобы быстро: тип + тариф 1/2/3 + описание + сроки.",
+
+        footer:"Artem — превью и аватарки",
+        fab_order:"Заказать в Telegram",
+        fab_channel:"Мой ТГК",
+      },
+
+      uk: {
+        brand_title:"Artem — Дизайнер",
+        brand_sub:"Прев’ю • аватарки",
+        menu:"Меню",
+        nav_tariffs:"Тарифи",
+        nav_order:"Оформити замовлення",
+        nav_contact:"Контакти",
+        kicker:"Зроблю дизайн, який чіпляє",
+        h1:"Artem — роблю<br/>прев’ю та аватарки",
+        lead:"Обирай тариф 1/2/3 → заповнюй заявку → з’явиться кнопка і тебе перекине в Telegram до мене в ЛС з готовим текстом.",
+        go_order:"Оформити замовлення",
+        go_tariffs:"Дивитись тарифи",
+        pill_1:"🎯 Під твою нішу",
+        pill_2:"✅ Без цін на сайті",
+        pill_3:"⚡ Швидко",
+        side_title:"Що роблю",
+        side_text:"Прев’ю для YouTube/Shorts • Аватарки для Telegram/YouTube",
+        side_title2:"Як замовити",
+        side_text2:"Обираєш тип і тариф 1/2/3 → пишеш опис → тиснеш кнопку → Telegram відкривається з заявкою.",
+        note:"💡 Ім’я не потрібно. У заявці: тип, тариф і опис.",
+
+        tariffs_title:"Тарифи",
+        tariffs_sub:"Обери 1 / 2 / 3 — без цін",
+        group_preview:"Прев’ю",
+        group_avatar:"Аватарки",
+        group_hint:"3 тарифи",
+        tariffs_hint:"💡 На сайті без цін. Просто обери тариф 1/2/3 і напиши опис.",
+
+        t1:"Тариф 1",
+        t2:"Тариф 2",
+        t3:"Тариф 3",
+        p1_short:"Швидко",
+        p2_short:"Сильніше",
+        p3_short:"Максимум",
+        p1_desc:"Базове прев’ю: чисто, читабельно, без зайвого.",
+        p2_desc:"Підсилений стиль: ефекти, виділення об’єкта, сильніший контраст.",
+        p3_desc:"Максимальний стиль: потужний ефект, підбір під канал, “як у топів”.",
+        a1_short:"Мінімал",
+        a2_short:"Об’єм",
+        a3_short:"Бренд",
+        a1_desc:"Акуратна аватарка: чиста форма, хороший контраст, мінімал.",
+        a2_desc:"Більш “дорого”: об’єм, світло, ефект, акуратний стиль.",
+        a3_desc:"Під бренд: підбір кольорів/символіки, максимальний стиль.",
+
+        tag_simple:"мінімал",
+        tag_clean:"чисто",
+        tag_ctr:"CTR",
+        tag_fx:"ефекти",
+        tag_premium:"преміум",
+        tag_brand:"під бренд",
+        tag_glossy:"об’єм",
+
+        order_title:"Оформити замовлення",
+        order_sub:"Обери тип + тариф 1/2/3 + опиши — і з’явиться кнопка",
+        order_left_title:"Заявка",
+        order_left_text:"Ім’я не потрібно. У заявці лише: тип, тариф і опис.",
+        f_kind:"Тип",
+        f_tariff:"Тариф",
+        f_desc:"Опис",
+        f_deadline:"Терміни (необов’язково)",
+        btn_build:"Зібрати заявку",
+        btn_send:"Надіслати в Telegram",
+        pick_hint:"Можна клікнути на картку тарифу вище — він обереться автоматично.",
+        opt_choose:"— обери —",
+        opt_choose_tariff:"— обери тариф —",
+        opt_preview:"Прев’ю",
+        opt_avatar:"Аватарка",
+        desc_hint:"Приклад: “Прев’ю для CapCut, стиль як у MrBeast, текст: …, кольори: …”",
+        need_fill:"Заповни: Тип + Тариф (1/2/3) + Опис. Тоді з’явиться кнопка в Telegram.",
+
+        order_right_title:"Контакти",
+        order_right_text:"Якщо хочеш — можеш просто написати в Telegram.",
+        tg_direct:"Написати @artemxxw2",
+        tg_channel:"Перейти в ТГК",
+        order_note:"✅ Після заповнення з’явиться кнопка, і Telegram відкривається з готовим текстом.",
+
+        contact_title:"Контакти",
+        contact_sub:"Найшвидше — Telegram",
+        contact_note:"Щоб швидко: тип + тариф 1/2/3 + опис + терміни.",
+
+        footer:"Artem — прев’ю та аватарки",
+        fab_order:"Замовити в Telegram",
+        fab_channel:"Мій ТГК",
+      },
+
+      en: {
+        brand_title:"Artem — Designer",
+        brand_sub:"Thumbnails • avatars",
+        menu:"Menu",
+        nav_tariffs:"Plans",
+        nav_order:"Order",
+        nav_contact:"Contact",
+        kicker:"Design that gets clicks",
+        h1:"Artem — I create<br/>thumbnails & avatars",
+        lead:"Choose plan 1/2/3 → fill the request → a button appears and opens Telegram DM with a ready text.",
+        go_order:"Place order",
+        go_tariffs:"View plans",
+        pill_1:"🎯 Niche-based",
+        pill_2:"✅ No prices on site",
+        pill_3:"⚡ Fast",
+        side_title:"What I do",
+        side_text:"YouTube/Shorts thumbnails • Telegram/YouTube avatars",
+        side_title2:"How to order",
+        side_text2:"Choose type + plan 1/2/3 → write description → click button → Telegram opens with the request.",
+        note:"💡 No name needed. Request includes: type, plan, description.",
+
+        tariffs_title:"Plans",
+        tariffs_sub:"Pick 1 / 2 / 3 — no prices",
+        group_preview:"Thumbnails",
+        group_avatar:"Avatars",
+        group_hint:"3 plans",
+        tariffs_hint:"💡 No prices shown. Choose plan 1/2/3 and write description.",
+
+        t1:"Plan 1",
+        t2:"Plan 2",
+        t3:"Plan 3",
+        p1_short:"Fast",
+        p2_short:"Stronger",
+        p3_short:"Max",
+        p1_desc:"Base thumbnail: clean, readable, minimal.",
+        p2_desc:"Enhanced style: effects, subject focus, stronger contrast.",
+        p3_desc:"Maximum style: strong impact, channel-matching, “top creator” vibe.",
+        a1_short:"Minimal",
+        a2_short:"Depth",
+        a3_short:"Brand",
+        a1_desc:"Clean avatar: simple shape, good contrast, minimal.",
+        a2_desc:"More premium: depth, light, effects.",
+        a3_desc:"Brand fit: colors/symbols matching, maximum style.",
+
+        tag_simple:"minimal",
+        tag_clean:"clean",
+        tag_ctr:"CTR",
+        tag_fx:"effects",
+        tag_premium:"premium",
+        tag_brand:"brand",
+        tag_glossy:"depth",
+
+        order_title:"Place an order",
+        order_sub:"Choose type + plan 1/2/3 + describe — button will appear",
+        order_left_title:"Request",
+        order_left_text:"No name needed. Only: type, plan, description.",
+        f_kind:"Type",
+        f_tariff:"Plan",
+        f_desc:"Description",
+        f_deadline:"Deadline (optional)",
+        btn_build:"Build request",
+        btn_send:"Send to Telegram",
+        pick_hint:"You can click a plan card above — it will auto-select.",
+        opt_choose:"— choose —",
+        opt_choose_tariff:"— choose plan —",
+        opt_preview:"Thumbnail",
+        opt_avatar:"Avatar",
+        desc_hint:"Example: “Thumbnail for CapCut, MrBeast vibe, text: …, colors: …”",
+        need_fill:"Fill in: Type + Plan (1/2/3) + Description. Then Telegram button appears.",
+
+        order_right_title:"Contact",
+        order_right_text:"Or just message me on Telegram.",
+        tg_direct:"Message @artemxxw2",
+        tg_channel:"Open channel",
+        order_note:"✅ After building, Telegram opens with a ready message.",
+
+        contact_title:"Contact",
+        contact_sub:"Fastest way — Telegram",
+        contact_note:"Fast order: type + plan 1/2/3 + description + deadline.",
+
+        footer:"Artem — thumbnails & avatars",
+        fab_order:"Order on Telegram",
+        fab_channel:"My channel",
+      }
+    };
+
+    let CURRENT_LANG = "ru";
+    const langBtns = $$(".langbtn");
+
+    function t(key){
+      return (I18N[CURRENT_LANG] && I18N[CURRENT_LANG][key]) ? I18N[CURRENT_LANG][key] : null;
+    }
+
+    function kindLabel(kind){
+      if(kind==="preview") return t("opt_preview") || "Превью";
+      if(kind==="avatar") return t("opt_avatar") || "Аватарка";
+      return kind || "";
+    }
+
+    function buildOrderText(){
+      const kind = (kindSel.value || "").trim();
+      const tariff = (tariffSel.value || "").trim();
+      const desc = (descEl.value || "").trim();
+      const deadline = (deadlineEl.value || "").trim();
+
+      if(!kind || !tariff || !desc){
+        previewText.style.display = "block";
+        previewText.textContent = (t("need_fill") || "Заполни: Тип + Тариф (1/2/3) + Описание. Тогда появится кнопка в Telegram.");
+        disableTelegramButton();
+        return;
+      }
+
+      const lines = [];
+      lines.push("✅ ЗАЯВКА");
+      lines.push("— Тип: " + kindLabel(kind));
+      lines.push("— Тариф: " + tariff);
+      if (deadline) lines.push("— Сроки: " + deadline);
+      lines.push("");
+      lines.push("📝 Описание:");
+      lines.push(desc);
+
+      const text = lines.join("\n");
+      previewText.style.display = "block";
+      previewText.textContent = text;
+
+      const url = `https://t.me/${TELEGRAM_USER}?text=${encodeURIComponent(text)}`;
+      btnTG.href = url;
+      btnTG.classList.remove("disabled");
+      btnTG.setAttribute("aria-disabled","false");
+    }
+
+    function applyLang(lang){
+      CURRENT_LANG = lang;
+      document.documentElement.lang = (lang === "uk") ? "uk" : (lang === "en" ? "en" : "ru");
+      langBtns.forEach(b => b.classList.toggle("active", b.dataset.lang === lang));
+
+      $$("[data-i18n]").forEach(el=>{
+        const key = el.getAttribute("data-i18n");
+        const val = t(key);
+        if(val) el.innerHTML = val;
+      });
+
+      // placeholders
+      descEl.placeholder = (lang==="uk")
+        ? "Напиши текст, стиль, кольори, нішу, приклад (якщо є)."
+        : (lang==="en")
+          ? "Write text, style, colors, niche, example (if any)."
+          : "Напиши текст, стиль, цвета, нишу, пример (если есть).";
+
+      deadlineEl.placeholder = (lang==="uk")
+        ? "Наприклад: сьогодні / завтра / до 18:00"
+        : (lang==="en")
+          ? "E.g. today / tomorrow / by 18:00"
+          : "Например: сегодня / завтра / до 18:00";
+
+      document.title = (lang==="en") ? "Artem — Thumbnails & Avatars"
+                    : (lang==="uk") ? "Artem — прев’ю та аватарки"
+                    : "Artem — превью и аватарки";
+
+      localStorage.setItem("site_lang", lang);
+
+      // disable tg button on language switch too (keeps your flow)
+      disableTelegramButton();
+    }
+
+    // events
+    btnBuild.addEventListener("click", buildOrderText);
+    [kindSel, tariffSel, descEl, deadlineEl].forEach(el => el.addEventListener("input", disableTelegramButton));
+    [kindSel, tariffSel].forEach(el => el.addEventListener("change", disableTelegramButton));
+
+    langBtns.forEach(btn => btn.addEventListener("click", ()=>applyLang(btn.dataset.lang)));
+    applyLang(localStorage.getItem("site_lang") || "ru");
+  </script>
+</body>
+</html>
